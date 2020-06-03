@@ -1,8 +1,9 @@
 {
   "name": "@ljw1412/web-crawler-axios-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin of @ljw1412/web-crawler.Replace default request function with axios.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "tsc"
   },

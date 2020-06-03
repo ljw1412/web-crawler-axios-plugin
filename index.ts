@@ -40,7 +40,7 @@ async function axiosRequest(page: Page, data: CallbackData) {
   }
 }
 
-export default function(Crawler: CrawlerClass) {
+export const webCrawlerAxiosPlugin = function(Crawler: CrawlerClass) {
   const defaultFn = Crawler.prototype._getDefaultConfig
   Crawler.prototype._getDefaultConfig = function() {
     const defaultConfig = defaultFn()
@@ -48,3 +48,5 @@ export default function(Crawler: CrawlerClass) {
     return defaultConfig
   }
 }
+
+export default webCrawlerAxiosPlugin

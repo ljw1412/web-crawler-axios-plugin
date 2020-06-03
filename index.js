@@ -38,12 +38,12 @@ async function axiosRequest(page, data) {
             break;
     }
 }
-function default_1(Crawler) {
+exports.webCrawlerAxiosPlugin = function (Crawler) {
     const defaultFn = Crawler.prototype._getDefaultConfig;
     Crawler.prototype._getDefaultConfig = function () {
         const defaultConfig = defaultFn();
         defaultConfig.request = axiosRequest;
         return defaultConfig;
     };
-}
-exports.default = default_1;
+};
+exports.default = exports.webCrawlerAxiosPlugin;
