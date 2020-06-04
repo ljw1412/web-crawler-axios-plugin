@@ -45,6 +45,7 @@ export const webCrawlerAxiosPlugin = function(Crawler: CrawlerClass) {
   Crawler.prototype._getDefaultConfig = function() {
     const defaultConfig = defaultFn()
     defaultConfig.request = axiosRequest
+    defaultConfig.requestMethodName = 'axios'
     return defaultConfig
   }
 }
