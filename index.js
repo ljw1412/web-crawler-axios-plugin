@@ -7,35 +7,44 @@ exports.webCrawlerAxiosPlugin = void 0;
 const axios_1 = __importDefault(require("axios"));
 const proxy_agent_1 = __importDefault(require("proxy-agent"));
 const cheerio_1 = __importDefault(require("cheerio"));
-const web_crawler_1 = require("@ljw1412/web-crawler");
-async function axiosRequest(page, data) {
-    const { id, type, url, timeout, headers, proxy } = page;
+async function axiosRequest(page, cbData) {
+    const { id, type, url, timeout, headers, proxy, method, data, query, emitter } = page;
+    emitter.infoLog('Before Request', `#${id} axios:${url}`, { page });
     const options = { timeout, headers };
     if (['image', 'file'].includes(type))
         options.responseType = 'arraybuffer';
     if (proxy) {
         options.httpAgent = new proxy_agent_1.default(proxy);
         options.httpsAgent = new proxy_agent_1.default(proxy);
-        web_crawler_1.logger.warn('[请求代理]', url, '->', proxy);
+        emitter.warnLog('Request Proxy', `#${id} ${url} -> ${proxy}`, { page });
     }
-    web_crawler_1.logger.info(`[${id}|发起请求]axios:`, url);
-    const resp = await axios_1.default.get(url, options);
-    data.raw = resp.data;
+    let resp;
+    if (method === 'POST') {
+        resp = await axios_1.default.post(url, data, options);
+    }
+    else {
+        resp = await axios_1.default.get(url, Object.assign(options, { params: query }));
+    }
+    cbData.raw = resp.data;
     switch (type) {
         case 'html':
-            data.$ = cheerio_1.default.load(data.raw);
+            cbData.$ = cheerio_1.default.load(cbData.raw);
             break;
         case 'json':
-            try {
-                data.json = JSON.parse(data.raw);
+            if (typeof cbData.raw === 'object') {
+                cbData.json = cbData.raw;
+                break;
             }
-            catch (err) {
-                web_crawler_1.logger.error(`[${id}|JSON解析错误]`, data.page.url, '\n', err);
+            try {
+                cbData.json = JSON.parse(cbData.raw);
+            }
+            catch (error) {
+                emitter.errorLog('SyntaxError', `#${id} ${url}\n$JSON解析错误: ${error.message}`, { error, page });
             }
             break;
         case 'image':
         case 'file':
-            data.buffer = resp.data;
+            cbData.buffer = resp.data;
             break;
     }
 }

@@ -1,7 +1,7 @@
 import { Crawler } from '@ljw1412/web-crawler'
 // @ts-ignore
-import { superagentRequest } from '@ljw1412/web-crawler/lib/default'
-import { PageOptions } from '@ljw1412/web-crawler/types/base'
+import { superagentRequest } from '@ljw1412/web-crawler/lib/core/default'
+import { PageOptions } from '@ljw1412/web-crawler/types/core/base'
 import { webCrawlerAxiosPlugin } from '../index'
 import assert from 'assert'
 
@@ -67,4 +67,48 @@ describe('web-crawler-axios-plugin', function() {
     '[axios proxy] 使用axios请求',
     getTest('http://www.google.com', proxy, 'axios', 'Google', true)
   )
+
+  it('[axios Query]使用带参数的 GET 请求', async function() {
+    await new Promise((resolve, reject) => {
+      const c = new Crawler()
+      c.addPage({
+        type: 'json',
+        url: 'http://api.isoyu.com/api/News/new_list',
+        query: { type: 1, page: 1 },
+        callback: (err, { json }) => {
+          if (err) {
+            reject(err)
+            return assert(false, err)
+          }
+          if (!json) return assert(false, 'json is undefined.')
+          assert(json.msg === 'success')
+          resolve()
+        }
+      })
+      c.start()
+    })
+  })
+
+  it('[axios Data]使用带参数的 POST 请求', async function() {
+    await new Promise((resolve, reject) => {
+      const c = new Crawler()
+      c.addPage({
+        type: 'json',
+        url:
+          'https://manga.bilibili.com/twirp/comic.v1.Comic/HomeRecommend?device=pc&platform=web',
+        method: 'POST',
+        data: { page_num: 1, platform: 'phone', seed: 1, drag: 0 },
+        callback: (err, { json }) => {
+          if (err) {
+            reject(err)
+            return assert(false, err)
+          }
+          if (!json) return assert(false, 'json is undefined.')
+          assert(json.code === 0)
+          resolve()
+        }
+      })
+      c.start()
+    })
+  })
 })

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@ljw1412/web-crawler@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@ljw1412/web-crawler/-/web-crawler-0.0.16.tgz#7b5af37400ca28da2583d84d3f525e8874d4cec9"
-  integrity sha512-WD5BSwWK1hOAFaRlRQmYi9SodKd6xULk4kqMui4F4BKw3vJGJuBI9frDV9J7ERdDtVUwTBG08CN9QLx1NZIKeA==
+"@ljw1412/web-crawler@^0.0.24":
+  version "0.0.24"
+  resolved "https://registry.yarnpkg.com/@ljw1412/web-crawler/-/web-crawler-0.0.24.tgz#6bd378a7500f063d75efdcd88017a52b60868319"
+  integrity sha512-65RGVCVavN7csYT6ut3VLZOjkY78y11fZjgz+g8qxeT4gjxvGYbnWb1hRnLSe+h8dH3+cJTKjvc5fPcMF7H5yQ==
   dependencies:
     "@types/cheerio" "^0.22.18"
     "@types/puppeteer" "^3.0.0"

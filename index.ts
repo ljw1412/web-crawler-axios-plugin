@@ -2,40 +2,65 @@ import axios, { AxiosRequestConfig } from 'axios'
 import proxyAgent from 'proxy-agent'
 import cheerio from 'cheerio'
 import { Crawler, Page, logger } from '@ljw1412/web-crawler'
-import { CallbackData } from '@ljw1412/web-crawler/types/base'
+import { CallbackData } from '@ljw1412/web-crawler/types/core/base'
 
 interface CrawlerClass {
   prototype: Crawler
 }
 
-async function axiosRequest(page: Page, data: CallbackData) {
-  const { id, type, url, timeout, headers, proxy } = page
+async function axiosRequest(page: Page, cbData: CallbackData) {
+  const {
+    id,
+    type,
+    url,
+    timeout,
+    headers,
+    proxy,
+    method,
+    data,
+    query,
+    emitter
+  } = page
+
+  emitter.infoLog('Before Request', `#${id} axios:${url}`, { page })
   const options: AxiosRequestConfig = { timeout, headers }
   if (['image', 'file'].includes(type)) options.responseType = 'arraybuffer'
   if (proxy) {
     options.httpAgent = new proxyAgent(proxy)
     options.httpsAgent = new proxyAgent(proxy)
-    logger.warn('[请求代理]', url, '->', proxy)
+    emitter.warnLog('Request Proxy', `#${id} ${url} -> ${proxy}`, { page })
   }
 
-  logger.info(`[${id}|发起请求]axios:`, url)
-  const resp = await axios.get(url, options)
-  data.raw = resp.data
+  let resp
+  if (method === 'POST') {
+    resp = await axios.post(url, data, options)
+  } else {
+    resp = await axios.get(url, Object.assign(options, { params: query }))
+  }
+  cbData.raw = resp.data
 
   switch (type) {
     case 'html':
-      data.$ = cheerio.load(data.raw)
+      cbData.$ = cheerio.load(cbData.raw)
       break
     case 'json':
+      if (typeof cbData.raw === 'object') {
+        cbData.json = cbData.raw
+        break
+      }
       try {
-        data.json = JSON.parse(data.raw)
-      } catch (err) {
-        logger.error(`[${id}|JSON解析错误]`, data.page.url, '\n', err)
+        cbData.json = JSON.parse(cbData.raw)
+      } catch (error) {
+        emitter.errorLog(
+          'SyntaxError',
+          `#${id} ${url}\n$JSON解析错误: ${error.message}`,
+          { error, page }
+        )
       }
       break
     case 'image':
     case 'file':
-      data.buffer = resp.data
+      cbData.buffer = resp.data
       break
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@ljw1412/web-crawler-axios-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Plugin of @ljw1412/web-crawler.Replace default request function with axios.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ljw1412/web-crawler-axios-plugin#readme",
   "peerDependencies": {
-    "@ljw1412/web-crawler": "^0.0.16"
+    "@ljw1412/web-crawler": "^0.0.24"
   },
   "dependencies": {
     "@types/cheerio": "^0.22.18",
@@ -38,7 +38,7 @@
     "proxy-agent": "^3.1.1"
   },
   "devDependencies": {
-    "@ljw1412/web-crawler": "^0.0.16",
+    "@ljw1412/web-crawler": "^0.0.24",
     "@types/mocha": "^7.0.2",
     "mocha": "^7.2.0",
     "ts-node": "^8.9.1",
