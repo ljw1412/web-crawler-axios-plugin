@@ -38,7 +38,7 @@
     "proxy-agent": "^3.1.1"
   },
   "devDependencies": {
-    "@ljw1412/web-crawler": "^0.0.24",
+    "@ljw1412/web-crawler": "^0.0.25",
     "@types/mocha": "^7.0.2",
     "mocha": "^7.2.0",
     "ts-node": "^8.9.1",
